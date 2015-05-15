@@ -20,7 +20,7 @@ public class StockHolding implements Holding {
         return symbol;
     }
 
-    protected void setSymbol(String symbol) {
+    private void setSymbol(String symbol) {
         this.symbol = symbol;
     }
 
@@ -28,20 +28,16 @@ public class StockHolding implements Holding {
         return shares;
     }
 
-    public void setShares(int shares) {
+    private void setShares(int shares) {
         this.shares = shares;
-    }
-
-    public float getPrice() {
-        return this.price;
-    }
-
-    private void setPrice(float price) {
-        this.price = price;
     }
 
     private float getCurrentPrice() {
         // TODO - make remote call to get updated price info
         return 0;
     }
+
+    public void buyShares(int numberOfShares){}
+
+    public void sellShares(int numberOfShares){}
 }
