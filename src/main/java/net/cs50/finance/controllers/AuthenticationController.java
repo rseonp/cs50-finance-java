@@ -1,10 +1,7 @@
 package net.cs50.finance.controllers;
 
-import net.cs50.finance.controllers.AbstractFinanceController;
 import net.cs50.finance.models.User;
-import net.cs50.finance.models.dao.UserDao;
 import net.cs50.finance.models.util.PasswordHash;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthenticationController extends AbstractFinanceController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String displayRegisterForm() {
+    public String register() {
         return "register";
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String registerUser(String userName, String password, String confirmPassword, Model model) {
+    public String register(String userName, String password, String confirmPassword, Model model) {
 
         User existingUser = userDao.findByUserName(userName);
 
@@ -41,25 +38,12 @@ public class AuthenticationController extends AbstractFinanceController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String displayLoginForm(){
+    public String login(){
         return "login";
     }
 
-    @RequestMapping(value = "/logout")
-    public String logout(HttpServletRequest request){
-        request.getSession().invalidate();
-        return "login";
-    }
-
-    @RequestMapping(value = {"/", "/portfolio"}, method = RequestMethod.GET)
-    public String displayPortfolio(){
-        return "portfolio";
-    }
-
-    @RequestMapping(value = "/portfolio", method = RequestMethod.POST)
-    public String verifyLogin(String userName, String password, HttpServletRequest request, Model model){
-
-        // If accessing this path via POST, we're logging in
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(String userName, String password, HttpServletRequest request, Model model){
 
         User user = userDao.findByUserName(userName);
 
@@ -73,7 +57,20 @@ public class AuthenticationController extends AbstractFinanceController {
         // User is valid; set in session
         request.getSession().setAttribute(userSessionKey, user.getUserName());
 
+        return "redirect:portfolio";
+    }
+
+
+    @RequestMapping(value = "/logout")
+    public String logout(HttpServletRequest request){
+        request.getSession().invalidate();
+        return "login";
+    }
+
+    @RequestMapping(value = {"/", "/portfolio"}, method = RequestMethod.GET)
+    public String portfolio(){
         return "portfolio";
     }
+
 
 }

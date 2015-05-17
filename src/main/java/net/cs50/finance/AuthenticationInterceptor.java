@@ -28,6 +28,12 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
         if ( !authPages.contains(request.getRequestURI()) ) {
 
             String userId = (String) request.getSession().getAttribute(AbstractFinanceController.userSessionKey);
+
+            if (userId == null) {
+                response.sendRedirect("/login");
+                return false;
+            }
+
             User user = userDao.findById(userId);
 
             // If no ID present in session, redirect to login

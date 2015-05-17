@@ -43,16 +43,27 @@ public class Stock {
         return getName() + " (" + getSymbol() + "): $" + Float.toString(getPrice());
     }
 
+    /**
+     * Factory to create new Stock instances with current price information.
+     *
+     * @param symbol    stock symbol
+     * @return          Stock instance with current price information, if available, null otherwise
+     */
     public static Stock lookupStock(String symbol) {
 
         CSVRecord stockInfo;
         CSVParser parser;
 
         try {
+
+            // Fetch the CSV data
             URL url = new URL(urlBase + symbol);
             parser = CSVParser.parse(url, Charset.forName("UTF-8"), CSVFormat.DEFAULT);
+
+            // We expect a single record
             stockInfo = parser.getRecords().get(0);
             parser.close();
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
