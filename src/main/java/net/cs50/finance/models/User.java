@@ -1,9 +1,13 @@
 package net.cs50.finance.models;
 
+import net.cs50.finance.models.dao.UserDao;
 import net.cs50.finance.models.util.PasswordHash;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by cbay on 5/10/15.
@@ -11,31 +15,32 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends AbstractEntity {
 
-    private int id;
+    @Autowired
+    private UserDao userDao;
+
     private String userName;
     private String hash;
-    //private HashMap<String, StockHolding> portfolio = new HashMap<String, StockHolding>();
+    private Map<String, StockHolding> portfolio;
 
     public User() {}
 
     public User(String userName, String password) {
+
+        User existingUser = userDao.findByUserName(userName);
+
+        // Throw an unchecked exception on duplicate user names. The client should verify uniqueness.
+        if (existingUser != null) {
+            throw new IllegalArgumentException("User name already exists in the system. Duplicate user names are not allowed.");
+        }
+
         this.hash = PasswordHash.getHash(password);
         this.userName = userName;
+        this.portfolio = new HashMap<String, StockHolding>();
     }
 
-    @Id
-    @Column(name = "id", unique = true, nullable = false)
-    public int getId() {
-        return id;
-    }
-
-    private void setId(int id) {
-        this.id = id;
-    }
-
-    // TODO - handle non-unique user names appropriately
+    @NotNull
     @Column(name = "username", unique = true, nullable = false)
     public String getUserName() {
         return userName;
@@ -55,9 +60,25 @@ public class User {
         this.hash = hash;
     }
 
-
-    /*public HashMap<String, StockHolding> getPortfolio() {
+    @OneToMany
+    @JoinColumn(name = "owner_id")
+    public Map<String, StockHolding> getPortfolio() {
         return portfolio;
-    }*/
+    }
+
+    private void setPortfolio(Map<String, StockHolding> portfolio) {
+        this.portfolio = portfolio;
+    }
+
+    void addHolding (StockHolding holding) throws IllegalArgumentException {
+
+        // Ensure a holding for the symbol doesn't already exist
+        if (portfolio.containsKey(holding.getSymbol())) {
+            throw new IllegalArgumentException("A holding for symbol " + holding.getSymbol()
+                    + " already exits for user " + getUid());
+        }
+
+        portfolio.put(holding.getSymbol(), holding);
+    }
 
 }

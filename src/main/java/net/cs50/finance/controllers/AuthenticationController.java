@@ -15,6 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class AuthenticationController extends AbstractFinanceController {
 
+    @RequestMapping(value = "/")
+    public String index(){
+        return "redirect:portfolio";
+    }
+
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String register() {
         return "register";
@@ -66,11 +71,5 @@ public class AuthenticationController extends AbstractFinanceController {
         request.getSession().invalidate();
         return "login";
     }
-
-    @RequestMapping(value = {"/", "/portfolio"}, method = RequestMethod.GET)
-    public String portfolio(){
-        return "portfolio";
-    }
-
 
 }

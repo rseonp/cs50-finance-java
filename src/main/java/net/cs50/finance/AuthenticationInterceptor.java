@@ -5,6 +5,7 @@ import net.cs50.finance.models.User;
 import net.cs50.finance.models.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
 
-            User user = userDao.findById(userId);
+            User user = userDao.findByUid(userId);
 
             // If no ID present in session, redirect to login
             if (user == null) {

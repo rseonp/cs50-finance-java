@@ -31,7 +31,7 @@ public abstract class AbstractFinanceController {
 
         if (userId == null) return null;
 
-        return userDao.findById(userId);
+        return userDao.findByUid(userId);
 
     }
 
