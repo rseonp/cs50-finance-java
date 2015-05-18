@@ -60,7 +60,7 @@ public class AuthenticationController extends AbstractFinanceController {
         }
 
         // User is valid; set in session
-        request.getSession().setAttribute(userSessionKey, user.getUserName());
+        request.getSession().setAttribute(userSessionKey, user.getUid());
 
         return "redirect:portfolio";
     }

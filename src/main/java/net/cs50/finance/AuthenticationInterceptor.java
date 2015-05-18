@@ -23,12 +23,12 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
 
-        List<String> authPages = Arrays.asList("/login", "/register", "/logout", "/portfolio");
+        List<String> authPages = Arrays.asList("/login", "/register", "/logout");
 
         // Require sign-in for all but auth pages
         if ( !authPages.contains(request.getRequestURI()) ) {
 
-            String userId = (String) request.getSession().getAttribute(AbstractFinanceController.userSessionKey);
+            Integer userId = (Integer) request.getSession().getAttribute(AbstractFinanceController.userSessionKey);
 
             if (userId == null) {
                 response.sendRedirect("/login");

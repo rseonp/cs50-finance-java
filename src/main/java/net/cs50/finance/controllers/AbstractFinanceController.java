@@ -18,7 +18,7 @@ public abstract class AbstractFinanceController {
     private static final String errorTemplate = "error";
     private static final String errorMessageIdentifier = "message";
 
-    public static final String userSessionKey = "id";
+    public static final String userSessionKey = "user_id";
 
     public String displayError(String message, Model model) {
         model.addAttribute(errorMessageIdentifier, message);
@@ -26,13 +26,8 @@ public abstract class AbstractFinanceController {
     }
 
     public User getUserFromSession(HttpServletRequest request){
-
-        String userId = (String) request.getSession().getAttribute(userSessionKey);
-
-        if (userId == null) return null;
-
+        int userId = (int) request.getSession().getAttribute(userSessionKey);
         return userDao.findByUid(userId);
-
     }
 
 }
