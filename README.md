@@ -28,3 +28,16 @@ Have a look around at the code. You'll see that it's all in the `net.cs50.financ
 * Implement buy and sell. You'll find request handlers in `StockController.java`, relevant model methods in `StockHolding.java`, and a shared buy/sell template in `transaction_form.html` and `transaction_confirm.html`. (Read the controller code in detail to see how we manage this shared template, which would have been messy in PHP.) Note that you're making changes that should be persisting data in the database, so be sure that's happening correctly before checking this one off your list. You'll have to deal with a `StockLookupException` in some cases. Your controller should `try/catch` the affected calls and respond appropriately (hint: see `AbstractFinanceController.displayError` and it's usage in other locations within the project).
 * Now that you can buy and sell, let's make sure our users can't buy indefinitely (we forgot to give them a cash limit). Add a `cash` field to the `User` model class, making sure to include the proper persistence annotations. Then, update the user's cash on buy/sell requests, and handle a request to buy that exceeds available funds appropriately.
 * Display the user's stocks in a table. You'll find some code already in place in `PortfolioController.java` and the `portfolio.html` template. You should display the following fields for each stock in the template: display name (use `Stock.toString()`), number of shares owned, current price, and total value of shares owned. Format the currency values appropriately, with 2 decimal places. You may find the `th:each` Thymleaf tag useful here.
+
+## resources
+
+### Spring Boot/General/Other
+* [Spring Boot Reference Guide](http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
+* [Maven (Wikipedia)](http://en.wikipedia.org/wiki/Apache_Maven)
+* [Thymeleaf User Guide](http://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html)
+
+### Data/ORM/Hibernate
+* [What is ORM (Object-Relational Mapping)? (Wikipedia)](http://en.wikipedia.org/wiki/Object-relational_mapping)
+* [The JPA (Java Persistence API) (Wikipedia)](http://en.wikipedia.org/wiki/Java_Persistence_API#Related_technologies)
+* [Spring Data JPA Reference](http://docs.spring.io/spring-data/jpa/docs/1.8.0.RELEASE/reference/html/) (See section 2.4 for info on DAO query methods)
+* [ORM in Spring](http://docs.spring.io/spring/docs/current/spring-framework-reference/html/orm.html) (Note that the XML configuration sections here aren't relevant to Spring Boot, but there's some useful info on DAOs in Spring)
