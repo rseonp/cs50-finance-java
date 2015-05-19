@@ -19,6 +19,7 @@ public class User extends AbstractEntity {
     private String userName;
     private String hash;
     private Map<String, StockHolding> portfolio;
+    // TODO - add cash to user class
 
     public User() {}
 

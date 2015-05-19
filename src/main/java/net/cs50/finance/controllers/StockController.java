@@ -32,17 +32,8 @@ public class StockController extends AbstractFinanceController {
     @RequestMapping(value = "/quote", method = RequestMethod.POST)
     public String quote(String symbol, Model model) {
 
-        Stock stock;
+        // TODO - Implement quote lookup
 
-        try {
-            stock = Stock.lookupStock(symbol);
-        } catch (StockLookupException e) {
-            e.printStackTrace();
-            return displayError("Error retrieving info for stock: " + symbol, model);
-        }
-
-        model.addAttribute("stock_desc", stock.getSymbol() + " (" + stock.getName() + ")");
-        model.addAttribute("stock_price", "" + stock.getPrice());
         model.addAttribute("title", "Quote");
         model.addAttribute("quoteNavClass", "active");
 
@@ -60,18 +51,8 @@ public class StockController extends AbstractFinanceController {
     @RequestMapping(value = "/buy", method = RequestMethod.POST)
     public String buy(String symbol, int numberOfShares, HttpServletRequest request, Model model) {
 
-        User user = getUserFromSession(request);
-        StockHolding holding;
+        // TODO - Implement buy action
 
-        try {
-            holding = StockHolding.buyShares(user, symbol, numberOfShares);
-        } catch (StockLookupException e){
-            e.printStackTrace();
-            return displayError("Unable to buy stock due to lookup error.", model);
-        }
-
-        stockHoldingDao.save(holding);
-        model.addAttribute("confirmMessage", "You have successfully purchased " + numberOfShares + " shares of " + symbol);
         model.addAttribute("title", "Buy");
         model.addAttribute("action", "/buy");
         model.addAttribute("buyNavClass", "active");
@@ -90,18 +71,8 @@ public class StockController extends AbstractFinanceController {
     @RequestMapping(value = "/sell", method = RequestMethod.POST)
     public String sell(String symbol, int numberOfShares, HttpServletRequest request, Model model) {
 
-        User user = getUserFromSession(request);
-        StockHolding holding;
+        // TODO - Implement sell action
 
-        try {
-            holding = StockHolding.sellShares(user, symbol, numberOfShares);
-        } catch (StockLookupException e){
-            e.printStackTrace();
-            return displayError("Unable to buy stock due to lookup error.", model);
-        }
-
-        stockHoldingDao.save(holding);
-        model.addAttribute("confirmMessage", "You have successfully sold " + numberOfShares + " shares of " + symbol);
         model.addAttribute("title", "Sell");
         model.addAttribute("action", "/sell");
         model.addAttribute("sellNavClass", "active");
