@@ -23,6 +23,4 @@ public class PortfolioController extends AbstractFinanceController {
         return "portfolio";
     }
 
-    // TODO - Implement transaction history view
-
 }

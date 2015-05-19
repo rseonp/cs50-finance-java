@@ -1,9 +1,5 @@
 package net.cs50.finance.controllers;
 
-import net.cs50.finance.models.Stock;
-import net.cs50.finance.models.StockHolding;
-import net.cs50.finance.models.StockLookupException;
-import net.cs50.finance.models.User;
 import net.cs50.finance.models.dao.StockHoldingDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

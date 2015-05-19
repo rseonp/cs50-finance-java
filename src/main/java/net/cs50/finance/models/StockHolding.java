@@ -27,6 +27,7 @@ public class StockHolding extends AbstractEntity {
     private StockHolding() {}
 
     private StockHolding(String symbol, int sharesOwned, int ownerId) {
+        // TODO - make sure symbol is always upper or lowercase (your choice)
         this.symbol = symbol;
         this.sharesOwned = sharesOwned;
         this.ownerId = ownerId;
@@ -122,6 +123,8 @@ public class StockHolding extends AbstractEntity {
      */
     public static StockHolding buyShares(User user, String symbol, int numberOfShares) throws StockLookupException {
 
+        // TODO - make sure symbol matches case convention
+
         // Get existing holding
         Map<String, StockHolding> userPortfolio = user.getPortfolio();
         StockHolding holding;
@@ -148,6 +151,8 @@ public class StockHolding extends AbstractEntity {
      * @throws IllegalArgumentException
      */
     public static StockHolding sellShares(User user, String symbol, int numberOfShares) throws StockLookupException {
+
+        // TODO - make sure symbol matches case convention
 
         // Get existing holding
         Map<String, StockHolding> userPortfolio = user.getPortfolio();
