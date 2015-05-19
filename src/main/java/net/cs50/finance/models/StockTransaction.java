@@ -1,6 +1,9 @@
 package net.cs50.finance.models;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -15,7 +18,7 @@ public class StockTransaction extends AbstractEntity {
         BUY("buy"), SELL("sell");
         private String type;
 
-        private TransactionType(String type){
+        TransactionType(String type){
             this.type = type;
         }
     };
@@ -42,7 +45,7 @@ public class StockTransaction extends AbstractEntity {
         return stockHolding;
     }
 
-    private void setStockHolding(StockHolding stockHolding) {
+    protected void setStockHolding(StockHolding stockHolding) {
         this.stockHolding = stockHolding;
     }
 
@@ -52,7 +55,7 @@ public class StockTransaction extends AbstractEntity {
         return shares;
     }
 
-    private void setShares(int shares) {
+    protected void setShares(int shares) {
         this.shares = shares;
     }
 
@@ -62,7 +65,7 @@ public class StockTransaction extends AbstractEntity {
         return price;
     }
 
-    private void setPrice(float price) {
+    protected void setPrice(float price) {
         this.price = price;
     }
 
@@ -72,7 +75,7 @@ public class StockTransaction extends AbstractEntity {
         return transactionTime;
     }
 
-    private void setTransationTime(Date transationTime) {
+    protected void setTransationTime(Date transationTime) {
         this.transactionTime = transationTime;
     }
 
@@ -82,7 +85,7 @@ public class StockTransaction extends AbstractEntity {
         return symbol;
     }
 
-    private void setSymbol(String symbol) {
+    protected void setSymbol(String symbol) {
         this.symbol = symbol;
     }
 
@@ -92,8 +95,18 @@ public class StockTransaction extends AbstractEntity {
         return userId;
     }
 
-    private void setUserId(int userId) {
+    protected void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    @NotNull
+    @Column(name = "type", nullable = false)
+    public TransactionType getType() {
+        return this.type;
+    }
+
+    protected void setType(TransactionType type) {
+        this.type = type;
     }
 
 }
