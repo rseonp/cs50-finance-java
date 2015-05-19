@@ -39,7 +39,7 @@ public class Stock {
 
     @Override
     public String toString() {
-        return getName() + " (" + getSymbol() + "): $" + Float.toString(getPrice());
+        return getName() + " (" + getSymbol() + ")";
     }
 
     /**

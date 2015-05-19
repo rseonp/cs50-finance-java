@@ -1,6 +1,5 @@
 package net.cs50.finance.models;
 
-import net.cs50.finance.models.dao.UserDao;
 import net.cs50.finance.models.util.PasswordHash;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,9 +16,6 @@ import java.util.Map;
 @Table(name = "users")
 public class User extends AbstractEntity {
 
-    @Autowired
-    private UserDao userDao;
-
     private String userName;
     private String hash;
     private Map<String, StockHolding> portfolio;
@@ -27,14 +23,6 @@ public class User extends AbstractEntity {
     public User() {}
 
     public User(String userName, String password) {
-
-        User existingUser = userDao.findByUserName(userName);
-
-        // Throw an unchecked exception on duplicate user names. The client should verify uniqueness.
-        if (existingUser != null) {
-            throw new IllegalArgumentException("User name already exists in the system. Duplicate user names are not allowed.");
-        }
-
         this.hash = PasswordHash.getHash(password);
         this.userName = userName;
         this.portfolio = new HashMap<String, StockHolding>();
@@ -56,11 +44,11 @@ public class User extends AbstractEntity {
         return hash;
     }
 
-    private void setHash(String hash) {
+    protected void setHash(String hash) {
         this.hash = hash;
     }
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "owner_id")
     public Map<String, StockHolding> getPortfolio() {
         return portfolio;

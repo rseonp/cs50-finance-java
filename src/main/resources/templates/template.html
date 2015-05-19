@@ -12,12 +12,22 @@
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <script th:src="@{/js/scripts.js}"></script>
 
+    <style>
+        td {text-align: left;}
+    </style>
+
 </head>
 <body>
     <div class="container">
 
         <div id="top" th:fragment="masthead">
-            <a href="/"><img alt="C$50 Finance" src="/img/logo.gif"/></a>
+            <a href="/" style="display:block;"><img alt="C$50 Finance" src="/img/logo.gif"/></a>
+            <ul class="nav nav-pills" style="margin:5px auto 20px;display:inline-block;">
+                <li th:class="${portfolioNavClass}"><a href="/portfolio">Portfolio</a></li>
+                <li th:class="${quoteNavClass}"><a href="/quote">Quote</a></li>
+                <li th:class="${buyNavClass}"><a href="/buy">Buy</a></li>
+                <li th:class="${sellNavClass}"><a href="/sell">Sell</a></li>
+            </ul>
         </div>
 
         <div id="middle">

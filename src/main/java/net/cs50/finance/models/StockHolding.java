@@ -2,13 +2,14 @@ package net.cs50.finance.models;
 
 import net.cs50.finance.models.dao.StockHoldingDao;
 import net.cs50.finance.models.dao.StockTransactionDao;
-import net.cs50.finance.models.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cbay on 5/10/15.
@@ -16,15 +17,6 @@ import java.util.List;
 @Entity
 @Table(name = "stock_holdings")
 public class StockHolding extends AbstractEntity {
-
-    @Autowired
-    private static StockHoldingDao stockHoldingDao;
-
-    @Autowired
-    private StockTransactionDao stockTransactionDao;
-
-    @Autowired
-    private static UserDao userDao;
 
     private String symbol;
     private int sharesOwned;
@@ -47,7 +39,7 @@ public class StockHolding extends AbstractEntity {
         return ownerId;
     }
 
-    private void setOwnerId(int ownerId){
+    protected void setOwnerId(int ownerId){
         this.ownerId = ownerId;
     }
 
@@ -57,7 +49,7 @@ public class StockHolding extends AbstractEntity {
         return symbol;
     }
 
-    private void setSymbol(String symbol) {
+    protected void setSymbol(String symbol) {
         this.symbol = symbol;
     }
 
@@ -67,17 +59,16 @@ public class StockHolding extends AbstractEntity {
         return sharesOwned;
     }
 
-    // Should only be set internally upon buy/sell
-    private void setSharesOwned(int sharesOwned) {
+    protected void setSharesOwned(int sharesOwned) {
         this.sharesOwned = sharesOwned;
     }
 
-    @OneToMany(mappedBy = "stockHolding")
+    @OneToMany(mappedBy = "stockHolding", cascade = CascadeType.PERSIST)
     public List<StockTransaction> getTransactions() {
         return transactions;
     }
 
-    private void setTransactions(ArrayList<StockTransaction> transactions) {
+    protected void setTransactions(List<StockTransaction> transactions) {
         this.transactions = transactions;
     }
 
@@ -88,7 +79,7 @@ public class StockHolding extends AbstractEntity {
      * @throws IllegalArgumentException if numberOfShares < 0
      * @throws StockLookupException     if unable to lookup stock info
      */
-    public void buyShares(int numberOfShares) throws StockLookupException {
+    private void buyShares(int numberOfShares) throws StockLookupException {
 
         if (numberOfShares < 0) {
             throw new IllegalArgumentException("Can not purchase a negative number of shares.");
@@ -98,9 +89,6 @@ public class StockHolding extends AbstractEntity {
 
         StockTransaction transaction = new StockTransaction(this, numberOfShares, StockTransaction.TransactionType.BUY);
         this.transactions.add(transaction);
-
-        stockTransactionDao.save(transaction);
-        stockHoldingDao.save(this);
     }
 
     /**
@@ -110,7 +98,7 @@ public class StockHolding extends AbstractEntity {
      * @throws IllegalArgumentException if numberOfShares greater than shares owned
      * @throws StockLookupException     if unable to lookup stock info
      */
-    public void sellShares(int numberOfShares) throws StockLookupException {
+    private void sellShares(int numberOfShares) throws StockLookupException {
 
         if (numberOfShares > sharesOwned) {
             throw new IllegalArgumentException("Number to sell exceeds shares owned for stock" + symbol);
@@ -119,9 +107,6 @@ public class StockHolding extends AbstractEntity {
         setSharesOwned(sharesOwned - numberOfShares);
         StockTransaction transaction = new StockTransaction(this, numberOfShares, StockTransaction.TransactionType.SELL);
         this.transactions.add(transaction);
-
-        stockTransactionDao.save(transaction);
-        stockHoldingDao.save(this);
     }
 
     /**
@@ -135,17 +120,18 @@ public class StockHolding extends AbstractEntity {
     public static StockHolding buyShares(User user, String symbol, int numberOfShares) throws StockLookupException {
 
         // Get existing holding
-        StockHolding holding = stockHoldingDao.findBySymbolAndOwnerId(symbol, user.getUid());
+        Map<String, StockHolding> userPortfolio = user.getPortfolio();
+        StockHolding holding;
 
         // Create new holding, if user has never owned the stock before
-        if (holding == null) {
+        if (!userPortfolio.containsKey(symbol)) {
             holding = new StockHolding(symbol, numberOfShares, user.getUid());
             user.addHolding(holding);
         }
 
         // Conduct buy
+        holding = userPortfolio.get(symbol);
         holding.buyShares(numberOfShares);
-        userDao.save(user);
 
         return holding;
     }
@@ -161,15 +147,16 @@ public class StockHolding extends AbstractEntity {
     public static StockHolding sellShares(User user, String symbol, int numberOfShares) throws StockLookupException {
 
         // Get existing holding
-        StockHolding holding = stockHoldingDao.findBySymbolAndOwnerId(symbol, user.getUid());
+        Map<String, StockHolding> userPortfolio = user.getPortfolio();
+        StockHolding holding;
 
-        if (holding == null) {
+        if (!userPortfolio.containsKey(symbol)) {
             return null;
         }
 
         // Conduct sale
+        holding = userPortfolio.get(symbol);
         holding.sellShares(numberOfShares);
-        userDao.save(user);
 
         return holding;
     }
